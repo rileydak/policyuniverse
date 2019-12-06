@@ -111,6 +111,7 @@ class Statement(object):
         "Principal": { "AWS": ["value", "value"] }
         "Principal": { "Service": "value" }
         "Principal": { "Service": ["value", "value"] }
+        "Principal": { "Federated": ["value", "value"]} Edge case for assumerolepolicydocuments for Federation
 
         Return: Set of principals
         """
@@ -127,6 +128,9 @@ class Statement(object):
 
             if "Service" in principal:
                 self._add_or_extend(principal["Service"], principals)
+           
+            if "Federated" in principal:
+                self._add_or_extend(principal["Federated"], principals)
 
         else:
             self._add_or_extend(principal, principals)
