@@ -327,6 +327,24 @@ statement30 = dict(
     Condition={"StringLike": {"AWS:PrincipalOrgID": "o-*"}},
 )
 
+# "Principal": { "Federated":"value" }
+statement31 = dict(
+    Effect="Allow",
+    Principal={"Federated": "cognito-identity.amazonaws.com"},
+    Action=["sts:*"],
+    Resource="*",
+)
+
+
+
+# "Principal": { "Federated": ["value", "value"] }
+statement32 = dict(
+    Effect="Allow",
+    Principal={"Federated": ["cognito-identity.amazonaws.com"]},
+    Action=["sts:*"],
+    Resource="*",
+)
+
 
 class StatementTestCase(unittest.TestCase):
     def test_statement_effect(self):
@@ -372,6 +390,13 @@ class StatementTestCase(unittest.TestCase):
         del statement_wo_principal["Principal"]
         statement = Statement(statement_wo_principal)
         self.assertEqual(statement.principals, set([]))
+        
+        statement = Statement(statement31)
+        self.assertEqual(statement.principals, set(["cognito-identity.amazonaws.com"]))
+        
+        statement = Statement(statement32)
+        self.assertEqual(statement.principals, set(["cognito-identity.amazonaws.com"]))
+                 
 
     def test_statement_conditions(self):
         statement = Statement(statement07)
